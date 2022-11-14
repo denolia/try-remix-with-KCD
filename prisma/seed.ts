@@ -54,9 +54,9 @@ Isn't it great?
       slug: "my-second-post",
       title: "My Second Post!",
       markdown: `
-# This is my second post!
+## This is my second post!
 
-Isn't it great?
+Isn't it _great_?
     `.trim(),
     },
   ];
