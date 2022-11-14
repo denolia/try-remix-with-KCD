@@ -1,11 +1,9 @@
 import { Link, useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
-export const loader = async () => {
-  const posts = [
-    { slug: "my-first-post", title: "My First Post!" },
-    { slug: "my-second-post", title: "My Second Post!" },
-  ];
+import { getPosts } from "~/models/post.server";
 
+export const loader = async () => {
+  const posts = await getPosts();
   return json({ posts });
 };
 
