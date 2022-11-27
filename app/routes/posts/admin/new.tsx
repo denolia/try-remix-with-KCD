@@ -1,13 +1,17 @@
 import { Form } from "@remix-run/react";
+import { redirect } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
+import { createPost } from "~/models/post.server";
 
-export const action: ActionFunction = async ({ request }) => {
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: "/posts/admin",
-    },
-  });
+export const action: ActionFunction = async ({ request, params }) => {
+  const formData = Object.fromEntries(await request.formData());
+
+  const title = formData["title"];
+  const slug = formData["slug"];
+  const markdown = formData["markdown"];
+
+  await createPost({ title, slug, markdown });
+  return redirect("/posts/admin");
 };
 
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg`;
