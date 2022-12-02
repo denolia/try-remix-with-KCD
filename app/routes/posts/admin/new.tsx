@@ -6,9 +6,9 @@ import { createPost } from "~/models/post.server";
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = Object.fromEntries(await request.formData());
 
-  const title = formData["title"];
-  const slug = formData["slug"];
-  const markdown = formData["markdown"];
+  const title = formData["title"] as string | null | undefined;
+  const slug = formData["slug"] as string | null | undefined;
+  const markdown = formData["markdown"] as string | null | undefined;
 
   const errors = {
     title: title ? null : "Title is required",
@@ -20,7 +20,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     return json(errors);
   }
 
-  await createPost({ title, slug, markdown });
+  await createPost({ title: title!, slug: slug!, markdown: markdown! });
   return redirect("/posts/admin");
 };
 
