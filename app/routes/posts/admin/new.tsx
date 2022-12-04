@@ -2,6 +2,7 @@ import { Form, useActionData } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
 import { createPost } from "~/models/post.server";
+import invariant from "tiny-invariant";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = Object.fromEntries(await request.formData());
@@ -19,8 +20,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (hasErrors) {
     return json(errors);
   }
+  invariant(typeof title === "string", "Title must be a string");
+  invariant(typeof slug === "string", "Slug must be a string");
+  invariant(typeof markdown === "string", "Markdown must be a string");
 
-  await createPost({ title: title!, slug: slug!, markdown: markdown! });
+  await createPost({ title, slug, markdown });
   return redirect("/posts/admin");
 };
 
