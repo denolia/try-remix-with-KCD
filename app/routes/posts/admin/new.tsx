@@ -4,6 +4,10 @@ import type { ActionFunction } from "@remix-run/node";
 import { createPost } from "~/models/post.server";
 import invariant from "tiny-invariant";
 
+type ActionData =
+  | { title: string | null; slug: string | null; markdown: string | null }
+  | undefined;
+
 export const action: ActionFunction = async ({ request, params }) => {
   const formData = Object.fromEntries(await request.formData());
 
@@ -11,14 +15,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   const slug = formData["slug"] as string | null | undefined;
   const markdown = formData["markdown"] as string | null | undefined;
 
-  const errors = {
+  const errors: ActionData = {
     title: title ? null : "Title is required",
     slug: slug ? null : "Slug is required",
     markdown: markdown ? null : "Markdown is required",
   };
   const hasErrors = Object.values(errors).some(Boolean);
   if (hasErrors) {
-    return json(errors);
+    return json<ActionData>(errors);
   }
   invariant(typeof title === "string", "Title must be a string");
   invariant(typeof slug === "string", "Slug must be a string");
@@ -31,7 +35,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg`;
 
 export default function NewPostRoute() {
-  const errors = useActionData();
+  const errors = useActionData() as ActionData;
 
   return (
     <Form method="post">
