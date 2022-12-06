@@ -20,6 +20,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     slug: slug ? null : "Slug is required",
     markdown: markdown ? null : "Markdown is required",
   };
+
   const hasErrors = Object.values(errors).some(Boolean);
   if (hasErrors) {
     return json<ActionData>(errors);
