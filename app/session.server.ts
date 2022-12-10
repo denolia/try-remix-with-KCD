@@ -65,7 +65,7 @@ export async function requireUser(request: Request) {
 
 export async function requireAdminUser(request: Request) {
   const user = await requireUser(request);
-  if (user.email !== ENV.ADMIN_EMAIL) {
+  if (user.email !== process.env.ADMIN_EMAIL) {
     // this would cause an odd behavior for non-admins i think. Maybe just redirect?
     throw await logout(request);
   }
