@@ -63,6 +63,15 @@ export async function requireUser(request: Request) {
   throw await logout(request);
 }
 
+export async function requireAdminUser(request: Request) {
+  const user = await requireUser(request);
+  if (user.email !== ENV.ADMIN_EMAIL) {
+    // this would cause an odd behavior for non-admins i think. Maybe just redirect?
+    throw await logout(request);
+  }
+  return user;
+}
+
 export async function createUserSession({
   request,
   userId,
