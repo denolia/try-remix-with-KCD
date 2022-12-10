@@ -56,6 +56,11 @@ export function useOptionalUser(): User | undefined {
   return data.user;
 }
 
+export function useOptionalAdminUser() {
+  const user = useOptionalUser();
+  return user?.email === ENV.ADMIN_EMAIL ? user : null;
+}
+
 export function useUser(): User {
   const maybeUser = useOptionalUser();
   if (!maybeUser) {
