@@ -9,9 +9,11 @@ type ActionData =
   | { title: string | null; slug: string | null; markdown: string | null }
   | undefined;
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
   await requireAdminUser(request);
-  return json({});
+  if (params.slug === "new") return json({});
+
+  return json({ post: null });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -37,7 +39,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(typeof slug === "string", "Slug must be a string");
   invariant(typeof markdown === "string", "Markdown must be a string");
 
-  await createPost({ title, slug, markdown });
+  if (params.slug === "new") {
+    await createPost({ title, slug, markdown });
+  } else {
+    // todo
+  }
+
   return redirect("/posts/admin");
 };
 
