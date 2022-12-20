@@ -6,7 +6,7 @@ import {
 } from "@remix-run/react";
 import { json, LoaderFunction, redirect } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
-import { createPost, getPost } from "~/models/post.server";
+import { createPost, getPost, updatePost } from "~/models/post.server";
 import invariant from "tiny-invariant";
 import { requireAdminUser } from "~/session.server";
 
@@ -46,10 +46,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   invariant(typeof slug === "string", "Slug must be a string");
   invariant(typeof markdown === "string", "Markdown must be a string");
 
+  const newPost = { title, slug, markdown };
+
   if (params.slug === "new") {
-    await createPost({ title, slug, markdown });
+    await createPost(newPost);
   } else {
-    // todo
+    await updatePost(params.slug, newPost);
   }
 
   return redirect("/posts/admin");
