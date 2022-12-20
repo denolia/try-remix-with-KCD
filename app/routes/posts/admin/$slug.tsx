@@ -31,7 +31,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (params.slug === "new") return json<LoaderData>({});
 
   const post = params.slug ? await getPost(params.slug) : null;
-
+  const html = post.html();
   if (!post) throw new Response("Not Found", { status: 404 });
 
   return json<LoaderData>({ post });
@@ -178,4 +178,13 @@ export function CatchBoundary() {
   }
 
   throw new Error(`Unsure how to handle this error: ${caught.status}`);
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return (
+    <div className="text-red-600">
+      There was an error loading this post:
+      <pre>{error.message}</pre>
+    </div>
+  );
 }
